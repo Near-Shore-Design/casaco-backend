@@ -18,6 +18,8 @@ from os.path import abspath, basename, dirname, join, normpath
 # from sys import path
 
 import environ
+from dotenv import load_dotenv
+
 
 # from utils.oauth2_utils import get_username_from_claim, update_user_details
 
@@ -35,12 +37,12 @@ SECRET_KEY = 'django-insecure-6#+pnfd%e$iqx7d0^4bht(to899falixn04-43)ox1&xntn-fk
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
 INSTALLED_APPS = [
-    'users',
+    'django_extensions',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -50,7 +52,13 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
+    'django_filters',
     'corsheaders',
+    'users',
+    'properties',
+    'favouriteproperties',
+    'tours',
+    'drf_spectacular',
 ]
 
 MIDDLEWARE = [
@@ -66,6 +74,17 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'real_estate_backend.urls'
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'casa.colombia0011@gmail.com'
+EMAIL_HOST_PASSWORD = 'emkgwamagfgclgjf'
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = 'casa.colombia0011@gmail.com'
+
+FILE_UPLOAD_MAX_MEMORY_SIZE = 25 * 1024 * 1024
+DATA_UPLOAD_MAX_MEMORY_SIZE = 25 * 1024 * 1024
 
 TEMPLATES = [
     {
@@ -83,11 +102,28 @@ TEMPLATES = [
     },
 ]
 
+
+#AWS account credentials
+AWS_ACCESS_KEY_ID = 'AKIA2E4HGKGGEAEEPIHB'
+AWS_SECRET_ACCESS_KEY = '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'
+AWS_STORAGE_BUCKET_NAME = 'casa-colombia-real-estate'
+AWS_PROFILE_IMAGE_BUCKET_NAME='casa-colombia-users-profile-image'
+AWS_S3_USER_CUSTOM_DOMAIN = f'{AWS_PROFILE_IMAGE_BUCKET_NAME}.s3.amazonaws.com'
+AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
+AWS_S3_REGION = "us-east-1"
+#Rest Framework
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
+    'DEFAULT_SCHEMA_CLASS':'drf_spectacular.openapi.AutoSchema',
 }
+
+SPECTACULAR_SETTINGS = {
+    'TITLE':'Casa Colombia Real Estate',
+    'SCHEMA_PATH': '/schema.yml/'
+    }
 
 
 SIMPLE_JWT = {
@@ -105,11 +141,11 @@ WSGI_APPLICATION = 'real_estate_backend.wsgi.application'
 
 DATABASES = {
     "default": {
-        "ENGINE": env.str("SQL_ENGINE", "django.db.backends.postgresql_psycopg2"),
-        "NAME": env.str("SQL_DATABASE", "casa_colombia_real_estate"),
-        "USER": env.str("SQL_USER", "maddy"),
-        "PASSWORD": env.str("SQL_PASSWORD", "maddy"),
-        "HOST": env.str("SQL_HOST", "localhost"),
+        "ENGINE": env.str("SQL_ENGINE", "django.db.backends.postgresql"),
+        "NAME": env.str("SQL_DATABASE", "casa_real_estate"),
+        "USER": env.str("SQL_USER", "postgres"),
+        "PASSWORD": env.str("SQL_PASSWORD", "Alpine12*"),
+        "HOST": env.str("SQL_HOST", "database-3.c5hpwslivdg0.us-east-1.rds.amazonaws.com"),
         "PORT": env.str("SQL_PORT", "5432"),
     },
 }
@@ -186,6 +222,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = 'static'
+# STATICFILES_DIRS = [
+#     os.path.join(BASE_DIR, 'static'),
+# ]
+
+# STATIC_ROOT = os.path.join(BASE_DIR, 'assets')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field

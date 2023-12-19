@@ -36,7 +36,7 @@ class UserManager(BaseUserManager):
 
 class User(AbstractUser):
     username = None
-    email = models.EmailField(_('email address'), unique=True)
+    email = models.EmailField(_('email address'), unique=True, blank=True, null=True)
     USER_TYPE_CHOICES = [
         ('admin', 'Admin'),
         ('normal', 'Normal'),
@@ -46,8 +46,10 @@ class User(AbstractUser):
     first_name = models.CharField(_('first name'), max_length=30, blank=True)
     last_name = models.CharField(_('last name'), max_length=30, blank=True)
     user_type = models.CharField(_('user type'), max_length=20, choices=USER_TYPE_CHOICES, default='normal')
+    image = models.CharField(_('image'), max_length=200, blank=True, default=None, null=True)
 
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
+    

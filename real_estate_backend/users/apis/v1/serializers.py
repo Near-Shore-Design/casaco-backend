@@ -41,8 +41,6 @@ class UserSignUpSerializer(UserSerializer):
         return data
 
     def create(self, validated_data):
-        print('--------------------------------------------')
-        print(validated_data)
         user = User.objects.create_user(
             validated_data["email"],
             validated_data["password"],
@@ -51,6 +49,10 @@ class UserSignUpSerializer(UserSerializer):
         )
         return user
 
+class EditUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model= User
+        fields = ['first_name', 'last_name', 'email', 'image']
 
 class ChangePasswordSerializer(serializers.Serializer):
     old_password = serializers.CharField(required=True)
@@ -60,4 +62,8 @@ class ChangePasswordSerializer(serializers.Serializer):
         if not self.context["request"].user.check_password(data["old_password"]):
             raise serializers.ValidationError("Incorrect old password.")
 
+        return data
+
+class ResetPasswordSerializer(serializers.Serializer):
+    def validate(self, data):
         return data
